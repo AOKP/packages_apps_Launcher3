@@ -56,6 +56,12 @@
         launcher:screen="3"
         launcher:x="2"
         launcher:y="3" />
+    <favorite
+        launcher:packageName="com.aokp.romcontrol"
+        launcher:className="com.aokp.romcontrol.MainActivity"
+        launcher:screen="3"
+        launcher:x="3"
+        launcher:y="3" />
 
     <!-- Far-right screen [4] -->
 
@@ -75,8 +81,8 @@
         launcher:x="1"
         launcher:y="0" />
     <favorite
-        launcher:packageName="com.android.mms"
-        launcher:className="com.android.mms.ui.ConversationList"
+        launcher:packageName="com.google.android.talk"
+        launcher:className="com.google.android.talk.SigningInActivity"
         launcher:container="-101"
         launcher:screen="3"
         launcher:x="3"
