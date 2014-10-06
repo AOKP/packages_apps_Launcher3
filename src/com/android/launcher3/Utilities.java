@@ -21,7 +21,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
@@ -116,15 +124,10 @@ public final class Utilities {
         }
     }
 
-    public static Bitmap createIconBitmap(Drawable icon, Context context) {
-        return createIconBitmap(icon, context, null, null, null, 1f);
-    }
-
     /**
      * Returns a bitmap suitable for the all apps view.
      */
-    static Bitmap createIconBitmap(Drawable icon, Context context, Drawable iconBack,
-            Drawable iconMask, Drawable iconUpon, float scale) {
+    static Bitmap createIconBitmap(Drawable icon, Context context) {
         synchronized (sCanvas) { // we share the statics :-(
             if (sIconWidth == -1) {
                 initStatics(context);
@@ -161,7 +164,7 @@ public final class Utilities {
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
 
-            Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
+            final Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
                     Bitmap.Config.ARGB_8888);
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
@@ -182,29 +185,7 @@ public final class Utilities {
 
             sOldBounds.set(icon.getBounds());
             icon.setBounds(left, top, left+width, top+height);
-            canvas.save();
-            if (iconMask != null && iconBack != null) {
-                canvas.scale(scale, scale, width / 2, height/2);
-            }
             icon.draw(canvas);
-            canvas.restore();
-            if (iconBack != null && iconMask != null) {
-                iconMask.setBounds(icon.getBounds());
-                ((BitmapDrawable) iconMask).getPaint().setXfermode(
-                        new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-                iconMask.draw(canvas);
-                canvas.setBitmap(null);
-                Bitmap finalBitmap = Bitmap.createBitmap(textureWidth, textureHeight,
-                        Bitmap.Config.ARGB_8888);
-                canvas.setBitmap(finalBitmap);
-                iconBack.setBounds(icon.getBounds());
-                iconBack.draw(canvas);
-                canvas.drawBitmap(bitmap, null, icon.getBounds(), null);
-                bitmap = finalBitmap;
-            }
-            if (iconUpon != null) {
-                iconUpon.draw(canvas);
-            }
             icon.setBounds(sOldBounds);
             canvas.setBitmap(null);
 
