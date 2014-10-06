@@ -1229,7 +1229,7 @@ public class LauncherModel extends BroadcastReceiver {
         }
     }
 
-    void forceReload() {
+    private void forceReload() {
         resetLoadedState(true, true);
 
         // Do this here because if the launcher activity is running it will be restarted.
